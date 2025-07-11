@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from 'react'
 import { useDropzone } from 'react-dropzone'
-import { Camera, Upload, X, ChevronDown, ChevronUp, Leaf, Flask } from 'lucide-react'
+import { Camera, Upload, X, ChevronDown, ChevronUp, Leaf, Beaker } from 'lucide-react'
 import toast from 'react-hot-toast'
 
 interface AnalysisResult {
@@ -223,7 +223,7 @@ export function ImageUpload() {
                 className="flex items-center justify-between w-full text-left"
               >
                 <div className="flex items-center space-x-3">
-                  <Flask className="text-blue-500" size={20} />
+                  <Beaker className="text-blue-500" size={20} />
                   <span className="font-medium">Chemical Treatments</span>
                 </div>
                 {expandedTreatment === 'chemical' ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
