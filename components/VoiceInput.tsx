@@ -25,7 +25,7 @@ export function VoiceInput({ onTranscript }: VoiceInputProps) {
     // Check if browser supports Speech Recognition
     if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
       setIsSupported(true)
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
+      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
       recognitionRef.current = new SpeechRecognition()
       
       recognitionRef.current.continuous = true
