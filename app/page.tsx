@@ -16,6 +16,7 @@ import {
 } from 'lucide-react'
 import { VoiceInput } from '@/components/VoiceInput'
 import { ImageUpload } from '@/components/ImageUpload'
+import WhatsAppBotFeatureCard from '../components/WhatsAppBotFeatureCard';
 
 export default function HomePage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -266,6 +267,9 @@ export default function HomePage() {
           </div>
         </div>
       </div>
+
+      {/* WhatsApp Bot Advanced Features Section */}
+      {/* (Section removed for chat widget implementation) */}
     </div>
   )
 } 

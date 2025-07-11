@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import { Providers } from './providers'
 import { Toaster } from 'react-hot-toast'
+import ChatBotWidget from '../components/ChatBotWidget';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -24,6 +25,7 @@ export default function RootLayout({
       <body className={`${inter.className} font-sans antialiased`}>
         <Providers>
           {children}
+          <ChatBotWidget />
           <Toaster 
             position="top-center"
             toastOptions={{
