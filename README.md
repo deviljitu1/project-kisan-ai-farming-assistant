@@ -58,7 +58,7 @@ A comprehensive React.js frontend for an AI-powered farming assistant that provi
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/project-kisan.git
+   git clone https://github.com/deviljitu1/project-kisan-ai-farming-assistant.git
    cd project-kisan
    ```
 

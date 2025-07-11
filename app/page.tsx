@@ -143,22 +143,74 @@ export default function HomePage() {
 
             {/* Feature Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
-              {features.map((feature, index) => (
-                <motion.div
-                  key={feature.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.3 + index * 0.1 }}
-                  className="card hover:shadow-lg transition-shadow duration-300 cursor-pointer"
-                  onClick={() => setActiveFeature(feature.id as 'voice' | 'image')}
-                >
-                  <div className={`w-12 h-12 ${feature.color} rounded-lg flex items-center justify-center mb-4`}>
-                    <feature.icon className="text-white" size={24} />
-                  </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">{feature.title}</h3>
-                  <p className="text-gray-600 text-sm">{feature.description}</p>
-                </motion.div>
-              ))}
+              {features.map((feature, index) => {
+                // Use Link for Market Prices and Government Schemes
+                if (feature.id === 'market') {
+                  return (
+                    <Link href="/marketplace" key={feature.id} passHref legacyBehavior>
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, delay: 0.3 + index * 0.1 }}
+                        className="card hover:shadow-lg transition-shadow duration-300 cursor-pointer"
+                        tabIndex={0}
+                        role="button"
+                        aria-label="Go to Market Prices"
+                        onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { window.location.href = '/marketplace'; } }}
+                      >
+                        <div className={`w-12 h-12 ${feature.color} rounded-lg flex items-center justify-center mb-4`}>
+                          <feature.icon className="text-white" size={24} />
+                        </div>
+                        <h3 className="text-lg font-semibold text-gray-900 mb-2">{feature.title}</h3>
+                        <p className="text-gray-600 text-sm">{feature.description}</p>
+                      </motion.div>
+                    </Link>
+                  );
+                }
+                if (feature.id === 'subsidies') {
+                  return (
+                    <Link href="/subsidies" key={feature.id} passHref legacyBehavior>
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, delay: 0.3 + index * 0.1 }}
+                        className="card hover:shadow-lg transition-shadow duration-300 cursor-pointer"
+                        tabIndex={0}
+                        role="button"
+                        aria-label="Go to Government Schemes"
+                        onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { window.location.href = '/subsidies'; } }}
+                      >
+                        <div className={`w-12 h-12 ${feature.color} rounded-lg flex items-center justify-center mb-4`}>
+                          <feature.icon className="text-white" size={24} />
+                        </div>
+                        <h3 className="text-lg font-semibold text-gray-900 mb-2">{feature.title}</h3>
+                        <p className="text-gray-600 text-sm">{feature.description}</p>
+                      </motion.div>
+                    </Link>
+                  );
+                }
+                // For Voice and Image, keep the local state logic
+                return (
+                  <motion.div
+                    key={feature.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: 0.3 + index * 0.1 }}
+                    className="card hover:shadow-lg transition-shadow duration-300 cursor-pointer"
+                    onClick={() => setActiveFeature(feature.id as 'voice' | 'image')}
+                    tabIndex={0}
+                    role="button"
+                    aria-label={`Open ${feature.title}`}
+                    onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { setActiveFeature(feature.id as 'voice' | 'image'); } }}
+                  >
+                    <div className={`w-12 h-12 ${feature.color} rounded-lg flex items-center justify-center mb-4`}>
+                      <feature.icon className="text-white" size={24} />
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">{feature.title}</h3>
+                    <p className="text-gray-600 text-sm">{feature.description}</p>
+                  </motion.div>
+                );
+              })}
             </div>
           </div>
         </div>
