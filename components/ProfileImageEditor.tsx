@@ -18,7 +18,7 @@ export default function ProfileImageEditor({
   showUploadButton = true,
   className = '' 
 }: ProfileImageEditorProps) {
-  const { user, updateProfileImage } = useAuthStore();
+  const { user, updateProfileImage, updateOriginalImage } = useAuthStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [crop, setCrop] = useState<CropType>({
@@ -56,6 +56,8 @@ export default function ProfileImageEditor({
     reader.onload = (e) => {
       const imageData = e.target?.result as string;
       setSelectedImage(imageData);
+      // Store the original image immediately
+      updateOriginalImage(imageData);
       setIsModalOpen(true);
     };
     reader.readAsDataURL(file);
@@ -153,6 +155,7 @@ export default function ProfileImageEditor({
 
   const handleRemoveImage = () => {
     updateProfileImage('');
+    updateOriginalImage('');
     toast.success('Profile image removed');
   };
 

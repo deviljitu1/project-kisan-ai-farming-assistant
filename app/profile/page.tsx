@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import { User, Phone, Shield, ArrowLeft, Camera } from 'lucide-react';
 import Link from 'next/link';
 import ProfileImageEditor from '../../components/ProfileImageEditor';
+import ProfileImageDisplay from '../../components/ProfileImageDisplay';
 
 export default function ProfilePage() {
   const { user, isAuthenticated } = useAuthStore();
@@ -120,14 +121,35 @@ export default function ProfilePage() {
               </div>
             </div>
 
-            {/* Profile Image Upload */}
+            {/* Profile Image Display and Upload */}
             <div className="border-t pt-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                 <Camera className="w-5 h-5 mr-2 text-green-600" />
-                Profile Image Settings
+                Profile Image
               </h2>
-              <div className="text-sm text-gray-600 mb-4">
-                Click on your profile image above to upload or edit. You can crop and rotate your image for the perfect fit.
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Original Image Display */}
+                <div>
+                  <h3 className="text-sm font-medium text-gray-700 mb-3">Original Image</h3>
+                  <ProfileImageDisplay size="xl" showOriginal={true} className="mx-auto" />
+                  <p className="text-xs text-gray-500 mt-2 text-center">Full image (not cropped)</p>
+                </div>
+                
+                {/* Profile Image Editor */}
+                <div>
+                  <h3 className="text-sm font-medium text-gray-700 mb-3">Profile Icon</h3>
+                  <div className="flex justify-center">
+                    <ProfileImageEditor size="lg" showUploadButton={true} />
+                  </div>
+                  <p className="text-xs text-gray-500 mt-2 text-center">Click to upload/crop</p>
+                </div>
+              </div>
+              
+              <div className="mt-4 text-sm text-gray-600">
+                <p>• Click on the profile icon to upload a new image</p>
+                <p>• Use the cropping tool to create a perfect circular profile picture</p>
+                <p>• The original image is preserved for full display</p>
               </div>
             </div>
 

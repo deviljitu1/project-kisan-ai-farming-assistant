@@ -6,7 +6,8 @@ export interface User {
   mobile: string;
   name: string;
   role?: string;
-  profileImage?: string; // Base64 encoded image or URL
+  profileImage?: string; // Cropped circular image for profile display
+  originalImage?: string; // Full original image
 }
 
 export interface AuthState {
@@ -16,6 +17,7 @@ export interface AuthState {
   otpSent: boolean;
   setUser: (user: User | null) => void;
   updateProfileImage: (imageData: string) => void;
+  updateOriginalImage: (imageData: string) => void;
   login: (mobile: string) => Promise<boolean>;
   verifyOtp: (otp: string) => Promise<boolean>;
   logout: () => void;
@@ -49,6 +51,18 @@ export const useAuthStore = create<AuthState>()(
             user: {
               ...user,
               profileImage: imageData
+            }
+          });
+        }
+      },
+
+      updateOriginalImage: (imageData: string) => {
+        const { user } = get();
+        if (user) {
+          set({
+            user: {
+              ...user,
+              originalImage: imageData
             }
           });
         }
