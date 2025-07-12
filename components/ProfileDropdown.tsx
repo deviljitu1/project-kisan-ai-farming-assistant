@@ -3,13 +3,14 @@
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { User, LogOut, ChevronDown, Settings } from 'lucide-react';
-import { useAuthStore } from '../lib/authStore';
+import { useAuthStore, TEST_USERS } from '../lib/authStore';
 import { toast } from 'react-hot-toast';
 
 export default function ProfileDropdown() {
   const [isOpen, setIsOpen] = useState(false);
+  const [showSwitch, setShowSwitch] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const { user, logout } = useAuthStore();
+  const { user, logout, setUser } = useAuthStore();
   const router = useRouter();
 
   useEffect(() => {
@@ -89,7 +90,13 @@ export default function ProfileDropdown() {
               <Settings className="w-4 h-4 mr-3" />
               Profile Settings
             </button>
-            
+            <button
+              onClick={() => setShowSwitch((v) => !v)}
+              className="flex items-center w-full px-4 py-2 text-sm text-blue-600 hover:bg-blue-50 transition-colors"
+            >
+              <User className="w-4 h-4 mr-3" />
+              Switch Account
+            </button>
             <button
               onClick={handleLogout}
               className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
@@ -98,6 +105,32 @@ export default function ProfileDropdown() {
               Logout
             </button>
           </div>
+
+          {/* Switch Account Dropdown */}
+          {showSwitch && (
+            <div className="border-t pt-2 px-2">
+              <div className="text-xs text-gray-500 mb-2 px-2">Switch to:</div>
+              <div className="space-y-1 max-h-48 overflow-y-auto">
+                {TEST_USERS.map((testUser) => (
+                  <button
+                    key={testUser.mobile}
+                    disabled={user.mobile === testUser.mobile}
+                    onClick={() => {
+                      setUser(testUser);
+                      setShowSwitch(false);
+                      setIsOpen(false);
+                      toast.success(`Switched to ${testUser.name}`);
+                    }}
+                    className={`flex items-center w-full px-3 py-2 rounded-lg text-sm transition-colors ${user.mobile === testUser.mobile ? 'bg-green-100 text-gray-400 cursor-not-allowed' : 'hover:bg-green-50 text-gray-700'}`}
+                  >
+                    <User className="w-4 h-4 mr-2 text-green-600" />
+                    <span className="flex-1 text-left">{testUser.name}</span>
+                    <span className="text-xs text-gray-400">{testUser.mobile}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>
