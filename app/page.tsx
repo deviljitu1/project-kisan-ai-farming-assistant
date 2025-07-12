@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { 
@@ -12,17 +12,59 @@ import {
   X,
   Smartphone,
   Globe,
-  Users
+  Users,
+  Droplet,
+  AlertTriangle,
+  CheckCircle,
+  Timer,
+  Pencil,
+  Check,
 } from 'lucide-react'
 import { VoiceInput } from '@/components/VoiceInput'
 import { ImageUpload } from '@/components/ImageUpload'
 import WhatsAppBotFeatureCard from '../components/WhatsAppBotFeatureCard';
 import ProfileDropdown from '../components/ProfileDropdown';
-import AuthDemo from '../components/AuthDemo';
 
 export default function HomePage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [activeFeature, setActiveFeature] = useState<'voice' | 'image' | null>(null)
+  const [activeFeature, setActiveFeature] = useState<'voice' | 'image' | 'iot' | null>(null)
+  // IoT System State
+  type Plot = { name: string; waterLevel: number; pumpOn: boolean; lastIrrigated: Date | null };
+  const [selectedPlot, setSelectedPlot] = useState<number>(0); // 0,1,2 for 3 plots
+  const [plots, setPlots] = useState<Plot[]>([
+    { name: 'Plot 1', waterLevel: 65, pumpOn: false, lastIrrigated: null },
+    { name: 'Plot 2', waterLevel: 42, pumpOn: false, lastIrrigated: null },
+    { name: 'Plot 3', waterLevel: 18, pumpOn: false, lastIrrigated: null },
+  ]);
+  const [isRenaming, setIsRenaming] = useState(false);
+  const [renameValue, setRenameValue] = useState('');
+  // Section refs for smooth scroll
+  const voiceRef = useRef<HTMLDivElement>(null);
+  const imageRef = useRef<HTMLDivElement>(null);
+  const iotRef = useRef<HTMLDivElement>(null);
+  // Simulate water level change when pump is on
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setPlots((prev) => prev.map((plot, idx) => {
+        if (plot.pumpOn) {
+          // Increase water level by 2% per tick, max 100
+          let newLevel = Math.min(plot.waterLevel + 2, 100);
+          return { ...plot, waterLevel: newLevel };
+        } else {
+          // Decrease water level by 0.2% per tick, min 0
+          let newLevel = Math.max(plot.waterLevel - 0.2, 0);
+          return { ...plot, waterLevel: newLevel };
+        }
+      }));
+    }, 1200);
+    return () => clearInterval(interval);
+  }, []);
+  // Helper for alert status
+  function getWaterStatus(level: number) {
+    if (level > 50) return { text: 'Good', color: 'text-green-700', icon: <CheckCircle className="w-5 h-5 text-green-500 inline" /> };
+    if (level > 30) return { text: 'Needs Water', color: 'text-yellow-700', icon: <AlertTriangle className="w-5 h-5 text-yellow-500 inline" /> };
+    return { text: 'Dry! Please irrigate', color: 'text-red-700', icon: <AlertTriangle className="w-5 h-5 text-red-500 inline" /> };
+  }
 
   const features = [
     {
@@ -52,6 +94,14 @@ export default function HomePage() {
       description: 'Find and apply for farming subsidies and schemes',
       icon: Gift,
       color: 'bg-purple-500'
+    },
+    // NEW IOT FEATURE
+    {
+      id: 'iot',
+      title: 'IoT System',
+      description: 'Control irrigation and monitor water level in real time',
+      icon: Droplet,
+      color: 'bg-cyan-500'
     }
   ]
 
@@ -194,19 +244,30 @@ export default function HomePage() {
                     </Link>
                   );
                 }
-                // For Voice and Image, keep the local state logic
+                // For Voice, Image, IoT, scroll to section
                 return (
                   <motion.div
                     key={feature.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 0.3 + index * 0.1 }}
-                    className="card hover:shadow-lg transition-shadow duration-300 cursor-pointer"
-                    onClick={() => setActiveFeature(feature.id as 'voice' | 'image')}
+                    onClick={() => {
+                      setActiveFeature(feature.id as 'voice' | 'image' | 'iot');
+                      setTimeout(() => {
+                        if (feature.id === 'voice' && voiceRef.current) voiceRef.current.scrollIntoView({ behavior: 'smooth' });
+                        if (feature.id === 'image' && imageRef.current) imageRef.current.scrollIntoView({ behavior: 'smooth' });
+                        if (feature.id === 'iot' && iotRef.current) iotRef.current.scrollIntoView({ behavior: 'smooth' });
+                      }, 100);
+                    }}
                     tabIndex={0}
                     role="button"
                     aria-label={`Open ${feature.title}`}
-                    onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { setActiveFeature(feature.id as 'voice' | 'image'); } }}
+                    onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') {
+                      setActiveFeature(feature.id as 'voice' | 'image' | 'iot');
+                      setTimeout(() => {
+                        if (feature.id === 'voice' && voiceRef.current) voiceRef.current.scrollIntoView({ behavior: 'smooth' });
+                        if (feature.id === 'image' && imageRef.current) imageRef.current.scrollIntoView({ behavior: 'smooth' });
+                        if (feature.id === 'iot' && iotRef.current) iotRef.current.scrollIntoView({ behavior: 'smooth' });
+                      }, 100);
+                    }}}
+                    className="card hover:shadow-lg transition-shadow duration-300 cursor-pointer"
                   >
                     <div className={`w-12 h-12 ${feature.color} rounded-lg flex items-center justify-center mb-4`}>
                       <feature.icon className="text-white" size={24} />
@@ -227,7 +288,7 @@ export default function HomePage() {
           <div className="card">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-bold text-gray-900">
-                {activeFeature === 'voice' ? 'Voice Analysis' : 'Crop Diagnosis'}
+                {activeFeature === 'voice' ? 'Voice Analysis' : activeFeature === 'image' ? 'Crop Diagnosis' : activeFeature === 'iot' ? 'IoT System' : ''}
               </h2>
               <button
                 onClick={() => setActiveFeature(null)}
@@ -236,9 +297,70 @@ export default function HomePage() {
                 <X size={24} />
               </button>
             </div>
-            
+            <div id="voice-section" ref={voiceRef} />
             {activeFeature === 'voice' && <VoiceInput />}
+            <div id="image-section" ref={imageRef} />
             {activeFeature === 'image' && <ImageUpload />}
+            <div id="iot-section" ref={iotRef} />
+            {activeFeature === 'iot' && (
+              <div className="space-y-6">
+                {/* Plot Selector */}
+                <div className="flex gap-3 mb-2 items-center">
+                  {[0,1,2].map(idx => (
+                    <button
+                      key={idx}
+                      onClick={() => { setSelectedPlot(idx); setIsRenaming(false); }}
+                      className={`px-4 py-2 rounded-lg font-semibold border transition-colors ${selectedPlot === idx ? 'bg-cyan-600 text-white border-cyan-700' : 'bg-white text-cyan-700 border-cyan-300 hover:bg-cyan-50'}`}
+                    >
+                      {plots[idx].name}
+                    </button>
+                  ))}
+                  {/* Rename icon and input for selected plot */}
+                  {isRenaming ? (
+                    <form className="flex items-center gap-2 ml-2" onSubmit={e => { e.preventDefault(); setPlots(plots => plots.map((p, idx) => idx === selectedPlot ? { ...p, name: renameValue || p.name } : p)); setIsRenaming(false); }}>
+                      <input
+                        className="border rounded px-2 py-1 text-sm w-28"
+                        value={renameValue}
+                        onChange={e => setRenameValue(e.target.value)}
+                        autoFocus
+                        maxLength={20}
+                      />
+                      <button type="submit" className="text-green-600 hover:text-green-800"><Check className="w-4 h-4" /></button>
+                      <button type="button" className="text-gray-400 hover:text-gray-600" onClick={() => setIsRenaming(false)}><X className="w-4 h-4" /></button>
+                    </form>
+                  ) : (
+                    <button className="ml-2 text-cyan-600 hover:text-cyan-800" title="Rename plot" onClick={() => { setIsRenaming(true); setRenameValue(plots[selectedPlot].name); }}>
+                      <Pencil className="w-4 h-4" />
+                    </button>
+                  )}
+                </div>
+                {/* Water Level & Alert */}
+                <div className="flex items-center gap-4">
+                  <Droplet className="w-10 h-10 text-cyan-500" />
+                  <div>
+                    <div className="text-lg font-semibold text-gray-900">Water Level</div>
+                    <div className="text-2xl font-bold">{Math.round(plots[selectedPlot].waterLevel)}%</div>
+                    <div className={`mt-1 font-medium flex items-center gap-2 ${getWaterStatus(plots[selectedPlot].waterLevel).color}`}>{getWaterStatus(plots[selectedPlot].waterLevel).icon} {getWaterStatus(plots[selectedPlot].waterLevel).text}</div>
+                  </div>
+                </div>
+                {/* Pump Control */}
+                <div className="flex items-center gap-4">
+                  <button
+                    onClick={() => setPlots(plots => plots.map((p, idx) => idx === selectedPlot ? { ...p, pumpOn: !p.pumpOn, lastIrrigated: !p.pumpOn ? new Date() : p.lastIrrigated } : p))}
+                    className={`px-6 py-3 rounded-lg font-semibold text-white transition-colors ${plots[selectedPlot].pumpOn ? 'bg-green-600 hover:bg-green-700' : 'bg-cyan-600 hover:bg-cyan-700'}`}
+                  >
+                    {plots[selectedPlot].pumpOn ? 'Turn Off Pump' : 'Turn On Pump'}
+                  </button>
+                  <span className={`ml-2 text-sm font-medium ${plots[selectedPlot].pumpOn ? 'text-green-700' : 'text-gray-500'}`}>{plots[selectedPlot].pumpOn ? 'Pump ON' : 'Pump OFF'}</span>
+                </div>
+                {/* Last Irrigated */}
+                <div className="flex items-center gap-2 text-xs text-gray-500">
+                  <Timer className="w-4 h-4" />
+                  Last irrigated: {plots[selectedPlot].lastIrrigated ? (plots[selectedPlot].lastIrrigated as Date).toLocaleString() : 'Never'}
+                </div>
+                <div className="text-xs text-gray-500">(This is a demo. IoT controls and water level are mocked for now.)</div>
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -273,21 +395,6 @@ export default function HomePage() {
       </div>
 
       {/* Authentication Demo Section */}
-      <div className="bg-gray-50 py-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Authentication System
-            </h2>
-            <p className="text-lg text-gray-600">
-              Try the switchable authentication system with mock and Firebase modes
-            </p>
-          </div>
-          <AuthDemo />
-        </div>
-      </div>
-
-      {/* WhatsApp Bot Advanced Features Section */}
       {/* (Section removed for chat widget implementation) */}
     </div>
   )
