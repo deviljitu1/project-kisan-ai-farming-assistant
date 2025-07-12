@@ -11,12 +11,14 @@ interface ProfileImageEditorProps {
   size?: 'sm' | 'md' | 'lg';
   showUploadButton?: boolean;
   className?: string;
+  allowRemove?: boolean; // NEW PROP
 }
 
 export default function ProfileImageEditor({ 
   size = 'md', 
   showUploadButton = true,
-  className = '' 
+  className = '',
+  allowRemove = false // NEW DEFAULT
 }: ProfileImageEditorProps) {
   const { user, updateProfileImage, updateOriginalImage } = useAuthStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -96,32 +98,39 @@ export default function ProfileImageEditor({
             return;
           }
 
-          const maxSize = Math.max(image.width, image.height);
-          const safeArea = 2 * ((maxSize / 2) * Math.sqrt(2));
+          // Calculate scale between displayed image and actual image
+          const scaleX = image.naturalWidth / (imgRef.current?.width || image.width);
+          const scaleY = image.naturalHeight / (imgRef.current?.height || image.height);
 
-          canvas.width = safeArea;
-          canvas.height = safeArea;
+          // Map crop coordinates to actual image size
+          const cropX = crop.x * scaleX;
+          const cropY = crop.y * scaleY;
+          const cropWidth = crop.width * scaleX;
+          const cropHeight = crop.height * scaleY;
 
-          ctx.translate(safeArea / 2, safeArea / 2);
+          // Set canvas size to crop size
+          canvas.width = cropWidth;
+          canvas.height = cropHeight;
+
+          // Move to center, rotate, then move back
+          ctx.save();
+          ctx.translate(canvas.width / 2, canvas.height / 2);
           ctx.rotate((rotation * Math.PI) / 180);
-          ctx.translate(-safeArea / 2, -safeArea / 2);
+          ctx.translate(-canvas.width / 2, -canvas.height / 2);
 
           ctx.drawImage(
             image,
-            safeArea / 2 - image.width * 0.5,
-            safeArea / 2 - image.height * 0.5
+            cropX,
+            cropY,
+            cropWidth,
+            cropHeight,
+            0,
+            0,
+            cropWidth,
+            cropHeight
           );
 
-          const data = ctx.getImageData(0, 0, safeArea, safeArea);
-
-          canvas.width = crop.width;
-          canvas.height = crop.height;
-
-          ctx.putImageData(
-            data,
-            0 - safeArea / 2 + image.width * 0.5 - crop.x,
-            0 - safeArea / 2 + image.height * 0.5 - crop.y
-          );
+          ctx.restore();
 
           resolve(canvas.toDataURL('image/jpeg'));
         };
@@ -198,7 +207,7 @@ export default function ProfileImageEditor({
         </div>
 
         {/* Remove Button (only for users with profile image) */}
-        {user?.profileImage && showUploadButton && (
+        {user?.profileImage && showUploadButton && allowRemove && (
           <button
             onClick={handleRemoveImage}
             className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"

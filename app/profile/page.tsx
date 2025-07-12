@@ -121,35 +121,38 @@ export default function ProfilePage() {
               </div>
             </div>
 
-            {/* Profile Image Display and Upload */}
+            {/* Authentication System Info & Demo Features */}
             <div className="border-t pt-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                <Camera className="w-5 h-5 mr-2 text-green-600" />
-                Profile Image
-              </h2>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Original Image Display */}
-                <div>
-                  <h3 className="text-sm font-medium text-gray-700 mb-3">Original Image</h3>
-                  <ProfileImageDisplay size="xl" showOriginal={true} className="mx-auto" />
-                  <p className="text-xs text-gray-500 mt-2 text-center">Full image (not cropped)</p>
+              <h2 className="text-lg font-semibold text-gray-900 mb-2">Authentication System</h2>
+              <div className="bg-blue-50 border border-blue-100 rounded-lg p-4 mb-4">
+                <h3 className="font-medium text-blue-800 mb-1">Authentication Demo</h3>
+                <div className="text-sm text-blue-700 mb-2">Mode: <span className="font-semibold">Mock</span></div>
+                <div className="mb-2">
+                  <span className="block text-gray-700 font-medium">Current Status</span>
+                  <span className="block text-gray-900">Profile</span>
+                  <span className="block text-gray-900">{user.name} ({user.role ? user.role.replace('_', ' ').toUpperCase() : 'User'})</span>
+                  <span className="block text-gray-700">{user.mobile}</span>
+                  <span className="block text-green-700">{user.role ? user.role.replace('_', ' ') : ''}</span>
                 </div>
-                
-                {/* Profile Image Editor */}
-                <div>
-                  <h3 className="text-sm font-medium text-gray-700 mb-3">Profile Icon</h3>
-                  <div className="flex justify-center">
-                    <ProfileImageEditor size="lg" showUploadButton={true} />
-                  </div>
-                  <p className="text-xs text-gray-500 mt-2 text-center">Click to upload/crop</p>
+                <div className="mb-2">
+                  <span className="block text-xs text-yellow-700 bg-yellow-100 rounded px-2 py-1 w-fit">Demo Mode Active</span>
+                  <span className="block text-xs text-yellow-700 mt-1">This is a mock authentication system for demonstration purposes. In production, this would be connected to Firebase or another authentication service.</span>
                 </div>
+                <ul className="list-disc list-inside text-xs text-gray-600 mt-2 space-y-1">
+                  <li>Any 10-digit mobile number is accepted</li>
+                  <li>Any 6-digit OTP is accepted</li>
+                  <li>Test users provide instant login</li>
+                  <li>User data persists across sessions</li>
+                </ul>
               </div>
-              
-              <div className="mt-4 text-sm text-gray-600">
-                <p>• Click on the profile icon to upload a new image</p>
-                <p>• Use the cropping tool to create a perfect circular profile picture</p>
-                <p>• The original image is preserved for full display</p>
+              <div className="bg-green-50 border border-green-100 rounded-lg p-4">
+                <h3 className="font-medium text-green-800 mb-1">Available Features</h3>
+                <ul className="list-disc list-inside text-sm text-gray-700 space-y-1">
+                  <li><span className="font-semibold">Profile Management</span> – View and manage account</li>
+                  <li><span className="font-semibold">Route Protection</span> – Secure protected pages</li>
+                  <li><span className="font-semibold">Role-based Access</span> – Different user roles</li>
+                  <li><span className="font-semibold">Session Persistence</span> – Stay logged in</li>
+                </ul>
               </div>
             </div>
 
