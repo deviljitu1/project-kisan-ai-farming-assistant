@@ -6,6 +6,7 @@ export interface User {
   mobile: string;
   name: string;
   role?: string;
+  profileImage?: string; // Base64 encoded image or URL
 }
 
 export interface AuthState {
@@ -14,6 +15,7 @@ export interface AuthState {
   isLoading: boolean;
   otpSent: boolean;
   setUser: (user: User | null) => void;
+  updateProfileImage: (imageData: string) => void;
   login: (mobile: string) => Promise<boolean>;
   verifyOtp: (otp: string) => Promise<boolean>;
   logout: () => void;
@@ -39,6 +41,18 @@ export const useAuthStore = create<AuthState>()(
       otpSent: false,
 
       setUser: (user) => set({ user, isAuthenticated: !!user }),
+
+      updateProfileImage: (imageData: string) => {
+        const { user } = get();
+        if (user) {
+          set({
+            user: {
+              ...user,
+              profileImage: imageData
+            }
+          });
+        }
+      },
 
       login: async (mobile: string) => {
         set({ isLoading: true });

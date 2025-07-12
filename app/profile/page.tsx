@@ -3,8 +3,9 @@
 import { useAuthStore } from '../../lib/authStore';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import { User, Phone, Shield, ArrowLeft } from 'lucide-react';
+import { User, Phone, Shield, ArrowLeft, Camera } from 'lucide-react';
 import Link from 'next/link';
+import ProfileImageUpload from '../../components/ProfileImageUpload';
 
 export default function ProfilePage() {
   const { user, isAuthenticated } = useAuthStore();
@@ -47,8 +48,18 @@ export default function ProfilePage() {
           {/* Profile Header */}
           <div className="bg-gradient-to-r from-green-500 to-emerald-600 px-6 py-8">
             <div className="flex items-center">
-              <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center">
-                <User className="w-10 h-10 text-white" />
+              <div className="relative">
+                {user.profileImage ? (
+                  <img
+                    src={user.profileImage}
+                    alt="Profile"
+                    className="w-20 h-20 rounded-full object-cover border-4 border-white/20"
+                  />
+                ) : (
+                  <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center">
+                    <User className="w-10 h-10 text-white" />
+                  </div>
+                )}
               </div>
               <div className="ml-6">
                 <h1 className="text-2xl font-bold text-white">{user.name}</h1>
@@ -117,6 +128,15 @@ export default function ProfilePage() {
                   </div>
                 </div>
               </div>
+            </div>
+
+            {/* Profile Image Upload */}
+            <div className="border-t pt-6">
+              <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                <Camera className="w-5 h-5 mr-2 text-green-600" />
+                Profile Image
+              </h2>
+              <ProfileImageUpload />
             </div>
 
             {/* Actions */}

@@ -49,24 +49,44 @@ export default function ProfileDropdown() {
 
   return (
     <div className="relative" ref={dropdownRef}>
-      <button
-        onClick={handleProfileClick}
-        className="flex items-center space-x-2 px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
-      >
-        <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-          <User className="w-4 h-4 text-green-600" />
-        </div>
-        <span className="hidden sm:block">{user.name}</span>
-        <ChevronDown className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
-      </button>
+              <button
+          onClick={handleProfileClick}
+          className="flex items-center space-x-2 px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+        >
+          <div className="w-8 h-8 rounded-full flex items-center justify-center overflow-hidden">
+            {user.profileImage ? (
+              <img
+                src={user.profileImage}
+                alt="Profile"
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="w-full h-full bg-green-100 rounded-full flex items-center justify-center">
+                <User className="w-4 h-4 text-green-600" />
+              </div>
+            )}
+          </div>
+          <span className="hidden sm:block">{user.name}</span>
+          <ChevronDown className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+        </button>
 
       {isOpen && (
         <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
           {/* User Info */}
           <div className="px-4 py-3 border-b border-gray-100">
             <div className="flex items-center">
-              <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                <User className="w-5 h-5 text-green-600" />
+              <div className="w-10 h-10 rounded-full flex items-center justify-center overflow-hidden">
+                {user.profileImage ? (
+                  <img
+                    src={user.profileImage}
+                    alt="Profile"
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-green-100 rounded-full flex items-center justify-center">
+                    <User className="w-5 h-5 text-green-600" />
+                  </div>
+                )}
               </div>
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-900">{user.name}</p>
