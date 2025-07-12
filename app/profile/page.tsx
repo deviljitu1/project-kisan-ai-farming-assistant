@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { User, Phone, Shield, ArrowLeft, Camera } from 'lucide-react';
 import Link from 'next/link';
-import ProfileImageUpload from '../../components/ProfileImageUpload';
+import ProfileImageEditor from '../../components/ProfileImageEditor';
 
 export default function ProfilePage() {
   const { user, isAuthenticated } = useAuthStore();
@@ -49,17 +49,7 @@ export default function ProfilePage() {
           <div className="bg-gradient-to-r from-green-500 to-emerald-600 px-6 py-8">
             <div className="flex items-center">
               <div className="relative">
-                {user.profileImage ? (
-                  <img
-                    src={user.profileImage}
-                    alt="Profile"
-                    className="w-20 h-20 rounded-full object-cover border-4 border-white/20"
-                  />
-                ) : (
-                  <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center">
-                    <User className="w-10 h-10 text-white" />
-                  </div>
-                )}
+                <ProfileImageEditor size="lg" showUploadButton={true} className="border-4 border-white/20" />
               </div>
               <div className="ml-6">
                 <h1 className="text-2xl font-bold text-white">{user.name}</h1>
@@ -134,9 +124,11 @@ export default function ProfilePage() {
             <div className="border-t pt-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                 <Camera className="w-5 h-5 mr-2 text-green-600" />
-                Profile Image
+                Profile Image Settings
               </h2>
-              <ProfileImageUpload />
+              <div className="text-sm text-gray-600 mb-4">
+                Click on your profile image above to upload or edit. You can crop and rotate your image for the perfect fit.
+              </div>
             </div>
 
             {/* Actions */}

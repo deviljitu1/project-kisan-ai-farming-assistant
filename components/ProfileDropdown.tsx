@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { User, LogOut, ChevronDown, Settings } from 'lucide-react';
 import { useAuthStore, TEST_USERS } from '../lib/authStore';
 import { toast } from 'react-hot-toast';
+import ProfileImageEditor from './ProfileImageEditor';
 
 export default function ProfileDropdown() {
   const [isOpen, setIsOpen] = useState(false);
@@ -53,19 +54,7 @@ export default function ProfileDropdown() {
           onClick={handleProfileClick}
           className="flex items-center space-x-2 px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
         >
-          <div className="w-8 h-8 rounded-full flex items-center justify-center overflow-hidden">
-            {user.profileImage ? (
-              <img
-                src={user.profileImage}
-                alt="Profile"
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <div className="w-full h-full bg-green-100 rounded-full flex items-center justify-center">
-                <User className="w-4 h-4 text-green-600" />
-              </div>
-            )}
-          </div>
+          <ProfileImageEditor size="sm" showUploadButton={false} />
           <span className="hidden sm:block">{user.name}</span>
           <ChevronDown className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
         </button>
@@ -75,19 +64,7 @@ export default function ProfileDropdown() {
           {/* User Info */}
           <div className="px-4 py-3 border-b border-gray-100">
             <div className="flex items-center">
-              <div className="w-10 h-10 rounded-full flex items-center justify-center overflow-hidden">
-                {user.profileImage ? (
-                  <img
-                    src={user.profileImage}
-                    alt="Profile"
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <div className="w-full h-full bg-green-100 rounded-full flex items-center justify-center">
-                    <User className="w-5 h-5 text-green-600" />
-                  </div>
-                )}
-              </div>
+              <ProfileImageEditor size="md" showUploadButton={true} />
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-900">{user.name}</p>
                 <p className="text-xs text-gray-500">{user.mobile}</p>
