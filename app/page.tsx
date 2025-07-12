@@ -17,6 +17,8 @@ import {
 import { VoiceInput } from '@/components/VoiceInput'
 import { ImageUpload } from '@/components/ImageUpload'
 import WhatsAppBotFeatureCard from '../components/WhatsAppBotFeatureCard';
+import ProfileDropdown from '../components/ProfileDropdown';
+import AuthDemo from '../components/AuthDemo';
 
 export default function HomePage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -80,11 +82,13 @@ export default function HomePage() {
                 <Link href="/subsidies" className="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium">
                   Subsidies
                 </Link>
+                <ProfileDropdown />
               </div>
             </div>
 
-            {/* Mobile menu button */}
-            <div className="md:hidden">
+            {/* Mobile menu button and profile */}
+            <div className="md:hidden flex items-center space-x-2">
+              <ProfileDropdown />
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                 className="text-gray-700 hover:text-primary-600 p-2"
@@ -265,6 +269,21 @@ export default function HomePage() {
               <p className="text-gray-600">Accuracy Rate</p>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Authentication Demo Section */}
+      <div className="bg-gray-50 py-16">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              Authentication System
+            </h2>
+            <p className="text-lg text-gray-600">
+              Try the switchable authentication system with mock and Firebase modes
+            </p>
+          </div>
+          <AuthDemo />
         </div>
       </div>
 
