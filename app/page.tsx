@@ -267,13 +267,13 @@ export default function HomePage() {
                         if (feature.id === 'iot' && iotRef.current) iotRef.current.scrollIntoView({ behavior: 'smooth' });
                       }, 100);
                     }}}
-                    className="card hover:shadow-lg transition-shadow duration-300 cursor-pointer"
+                    className="card min-w-0 hover:shadow-lg transition-shadow duration-300 cursor-pointer"
                   >
                     <div className={`w-12 h-12 ${feature.color} rounded-lg flex items-center justify-center mb-4`}>
                       <feature.icon className="text-white" size={24} />
                     </div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">{feature.title}</h3>
-                    <p className="text-gray-600 text-sm">{feature.description}</p>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2 text-base sm:text-lg">{feature.title}</h3>
+                    <p className="text-gray-600 text-sm sm:text-base">{feature.description}</p>
                   </motion.div>
                 );
               })}
@@ -305,21 +305,21 @@ export default function HomePage() {
             {activeFeature === 'iot' && (
               <div className="space-y-6">
                 {/* Plot Selector */}
-                <div className="flex gap-3 mb-2 items-center">
+                <div className="flex flex-wrap gap-3 mb-2 items-center w-full">
                   {[0,1,2].map(idx => (
                     <button
                       key={idx}
                       onClick={() => { setSelectedPlot(idx); setIsRenaming(false); }}
-                      className={`px-4 py-2 rounded-lg font-semibold border transition-colors ${selectedPlot === idx ? 'bg-cyan-600 text-white border-cyan-700' : 'bg-white text-cyan-700 border-cyan-300 hover:bg-cyan-50'}`}
+                      className={`px-4 py-2 rounded-lg font-semibold border transition-colors w-full sm:w-auto ${selectedPlot === idx ? 'bg-cyan-600 text-white border-cyan-700' : 'bg-white text-cyan-700 border-cyan-300 hover:bg-cyan-50'}`}
                     >
                       {plots[idx].name}
                     </button>
                   ))}
                   {/* Rename icon and input for selected plot */}
                   {isRenaming ? (
-                    <form className="flex items-center gap-2 ml-2" onSubmit={e => { e.preventDefault(); setPlots(plots => plots.map((p, idx) => idx === selectedPlot ? { ...p, name: renameValue || p.name } : p)); setIsRenaming(false); }}>
+                    <form className="flex items-center gap-2 ml-2 w-full sm:w-auto mt-2 sm:mt-0" onSubmit={e => { e.preventDefault(); setPlots(plots => plots.map((p, idx) => idx === selectedPlot ? { ...p, name: renameValue || p.name } : p)); setIsRenaming(false); }}>
                       <input
-                        className="border rounded px-2 py-1 text-sm w-28"
+                        className="border rounded px-2 py-1 text-sm w-full sm:w-28"
                         value={renameValue}
                         onChange={e => setRenameValue(e.target.value)}
                         autoFocus
@@ -335,7 +335,7 @@ export default function HomePage() {
                   )}
                 </div>
                 {/* Water Level & Alert */}
-                <div className="flex items-center gap-4">
+                <div className="flex flex-col sm:flex-row items-center gap-4 w-full">
                   <Droplet className="w-10 h-10 text-cyan-500" />
                   <div>
                     <div className="text-lg font-semibold text-gray-900">Water Level</div>
@@ -344,17 +344,17 @@ export default function HomePage() {
                   </div>
                 </div>
                 {/* Pump Control */}
-                <div className="flex items-center gap-4">
+                <div className="flex flex-col sm:flex-row items-center gap-4 w-full">
                   <button
                     onClick={() => setPlots(plots => plots.map((p, idx) => idx === selectedPlot ? { ...p, pumpOn: !p.pumpOn, lastIrrigated: !p.pumpOn ? new Date() : p.lastIrrigated } : p))}
-                    className={`px-6 py-3 rounded-lg font-semibold text-white transition-colors ${plots[selectedPlot].pumpOn ? 'bg-green-600 hover:bg-green-700' : 'bg-cyan-600 hover:bg-cyan-700'}`}
+                    className={`px-6 py-3 rounded-lg font-semibold text-white transition-colors w-full sm:w-auto ${plots[selectedPlot].pumpOn ? 'bg-green-600 hover:bg-green-700' : 'bg-cyan-600 hover:bg-cyan-700'}`}
                   >
                     {plots[selectedPlot].pumpOn ? 'Turn Off Pump' : 'Turn On Pump'}
                   </button>
                   <span className={`ml-2 text-sm font-medium ${plots[selectedPlot].pumpOn ? 'text-green-700' : 'text-gray-500'}`}>{plots[selectedPlot].pumpOn ? 'Pump ON' : 'Pump OFF'}</span>
                 </div>
                 {/* Last Irrigated */}
-                <div className="flex items-center gap-2 text-xs text-gray-500">
+                <div className="flex items-center gap-2 text-xs text-gray-500 w-full">
                   <Timer className="w-4 h-4" />
                   Last irrigated: {plots[selectedPlot].lastIrrigated ? (plots[selectedPlot].lastIrrigated as Date).toLocaleString() : 'Never'}
                 </div>
